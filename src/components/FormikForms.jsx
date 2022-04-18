@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFormik, Formik, Form, Field, ErrorMessage } from 'formik'
+import { useFormik, Formik, Form, Field, ErrorMessage, FieldArray } from 'formik'
 import * as Yup from "yup"
 import ErrorText from ".././components/atoms/ErrorText"
 
@@ -15,7 +15,8 @@ const initialValues = {
         regency: "",
         country: ""
     },
-    hobbies: ["", ""]
+    hobbies: [""],
+    books: [""]
 }
 
 const onSubmit = valuesNow => {
@@ -70,14 +71,14 @@ const FormikForms = () => {
                                 <Field className='border border-gray-500 rounded-lg my-2 py-2 px-4' type="password" name="password" id="password" placeholder='Enter password' />
                                 <ErrorMessage name="password" component={ErrorText} />
                             </div>
-                        </div>
-                        {/* About Field */}
-                        <div className="w-[50%]">
+                            {/* About Field */}
                             <div className="flex flex-col">
                                 <label htmlFor="about" className="font-bold">About</label>
                                 <Field as="textarea" className='border border-gray-500 rounded-lg my-2 py-2 px-4' type="text" name="about" id="about" placeholder='Enter about' />
                                 <ErrorMessage name="about" component={ErrorText} />
                             </div>
+                        </div>
+                        <div className="w-[50%]">
                             {/* Subdistric Field */}
                             <div className="flex items-center space-x-4 justify-between mt-5">
                                 <div className="w-[50%] flex flex-col">
@@ -120,6 +121,33 @@ const FormikForms = () => {
                                     {/* <ErrorMessage name="hobbies[1]" component={ErrorText} /> */}
                                 </div>
                             </div>
+
+                            <div className="w-full grid grid-cols-2 gap-x-4 mt-5">
+                                {/* Hobbies 1 Field */}
+                                <FieldArray name="books">
+                                    {fieldArrayProps => {
+                                        // console.log(fieldArrayProps)
+                                        const { form, push, remove } = fieldArrayProps
+                                        const { values } = form
+                                        const { books } = values
+                                        return (
+                                            <React.Fragment>
+                                                {books.map((book, index) => (
+                                                    <div key={index} className="w-full flex flex-col items-start justify-between mt-5">
+                                                        <label htmlFor="hobbies2" className="font-bold">{`Books ${index + 1}`}</label>
+                                                        <Field className='w-full border border-gray-500 rounded-lg my-2 py-2 px-4' type="text" name={`books[${index}]`} />
+                                                        <div className="w-full flex items-start">
+                                                            {index > 0 && <button onClick={() => remove(index)} className=" text-center py-2 mr-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold">Remove</button>}
+
+                                                            <button onClick={() => push("")} className=" py-2 text-center px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold">Add</button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </React.Fragment>
+                                        )
+                                    }}
+                                </FieldArray>
+                            </div>
                             {/* Button Action */}
                             <div className="mt-5">
                                 <button className="py-2 mr-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold">Reset</button>
@@ -129,7 +157,7 @@ const FormikForms = () => {
                     </div>
                 </Form>
             </Formik>
-        </React.Fragment>
+        </React.Fragment >
     )
 }
 
